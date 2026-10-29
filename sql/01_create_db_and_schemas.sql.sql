@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS northwind_warehouse;
+USE northwind_warehouse;
+
+CREATE SCHEMA IF NOT EXISTS stg;
+
+CREATE SCHEMA IF NOT EXISTS dw;
