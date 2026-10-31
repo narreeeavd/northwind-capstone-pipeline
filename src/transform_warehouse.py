@@ -1,29 +1,44 @@
+"""Phase 2: run the SQL scripts that build and load the dw schema."""
+import glob
 import os
-from db_connector import get_db_connection
+import re
 
-def run_sql_file(file_path):
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            sql_script = f.read()
-            
-        # Բաժանում ենք հարցումները իրարից (;) կետ-ստորակետով, եթե մի քանիսն են
-        for result in cursor.execute(sql_script, multi=True):
-            pass
-            
-        connection.commit()
-        print(f"Successfully executed: {file_path}")
-    except Exception as e:
-        print(f"Error executing {file_path}: {e}")
-        connection.rollback()
-    finally:
-        cursor.close()
-        connection.close()
+from sqlalchemy import text
+
+from config import SQL_DIR
+from db_connector import get_db_engine
+
+
+def split_statements(sql):
+    """Split a SQL script into individual statements (comments removed)."""
+    sql = re.sub(r"--[^\n]*", "", sql)
+    sql = re.sub(r"/\*.*?\*/", "", sql, flags=re.S)
+    return [s.strip() for s in sql.split(";") if s.strip()]
+
+
+def find_sql(prefix):
+    """Find a script in sql/ by its numeric prefix, e.g. '04'."""
+    matches = sorted(glob.glob(os.path.join(SQL_DIR, f"{prefix}_*.sql")))
+    if not matches:
+        raise FileNotFoundError(f"No SQL file starting with '{prefix}_' in {SQL_DIR}")
+    return matches[0]
+
+
+def run_sql_file(engine, path):
+    with open(path, "r", encoding="utf-8") as f:
+        statements = split_statements(f.read())
+    with engine.begin() as conn:
+        for stmt in statements:
+            conn.execute(text(stmt))
+    print(f"[OK] {os.path.basename(path)} ({len(statements)} statements)")
+
+
+def transform_warehouse(engine=None):
+    """Idempotent stg -> dw load: dimensions first, then the fact table."""
+    engine = engine or get_db_engine()
+    run_sql_file(engine, find_sql("04"))   # dimensions
+    run_sql_file(engine, find_sql("05"))   # fact table
+
 
 if __name__ == "__main__":
-    
-    sql_dir = "../sql_scripts"
-    run_sql_file(os.path.join(sql_dir, "04_upsert_dimensions.sql"))
-    run_sql_file(os.path.join(sql_dir, "05_upsert_fact_sales.sql"))
+    transform_warehouse()

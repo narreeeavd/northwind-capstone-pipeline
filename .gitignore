@@ -1,0 +1,15 @@
+# Python cache and virtual environments
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Local secrets (copy .env.example to .env)
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor files
+.DS_Store
+.vscode/
