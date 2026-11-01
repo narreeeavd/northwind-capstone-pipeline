@@ -255,7 +255,7 @@ Running the pipeline repeatedly on the same data produces the same state in `dw`
 ## Business Recommendations
 
 1. **Protect Beverages and Dairy Products** – together about 40% of revenue; keep stock and supplier reliability high.
-2. **Defend the top markets, grow the next tier** – the USA and Germany give about 38% of revenue; Austria, Brazil and France are the best targets for campaigns.
+2. **Defend the top markets, grow the next tier** – the USA and Germany give about 38% of revenue; Austria, Brazil, and France are the best targets for campaigns.
 3. **Do not extend discounts without a margin check** – they increase quantity but not revenue per line (p = 0.30). Test discount depth against profitability first.
 4. **Lead with pricing and assortment** – `unit_price` explains far more line value than quantity does, and Meat/Poultry lines are the most valuable.
 5. **One assortment for the top markets** – category mix does not differ significantly by country, so growth should come from customer volume rather than regional assortments.
@@ -271,7 +271,7 @@ Running the pipeline repeatedly on the same data produces the same state in `dw`
 ## Assumptions & Limitations
 
 - **Fiscal year** in `dim_date` starts on 1 July (an assumption; edit the formulas in `sql/03_create_warehouse.sql` to change it).
-- **Freight, shipper and shipping dates** are not modeled in the fact table (freight is order-level and would be double counted at order-line grain).
+- **Freight, shipper, and shipping dates** are not modeled in the fact table (freight is order-level and would be double-counted at order-line grain).
 - Only 11 of the 13 source CSV files are included; the two customer-demographics tables are optional and empty in the standard Northwind data.
 - The raw CSV files are committed (small, about 3,300 rows) so the repository is reproducible.
 - The Power BI file is binary and was not changed. If its model points to a table or column that was renamed, refresh the connection in Power BI.
@@ -280,4 +280,7 @@ Running the pipeline repeatedly on the same data produces the same state in `dw`
 
 ## Author
 
-Capstone project – ACA Data Analyst Profession program.
+**Nare Avdalyan**
+Data Analytics student, Yerevan State University (Actuarial and Financial Mathematics)
+Capstone project for the Armenian Code Academy (ACA) Data Analyst Profession program
+[LinkedIn](https://linkedin.com/in/nare-avdalyan) · [GitHub](https://github.com/narreeeavd)
